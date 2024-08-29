@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-from .database import get_all_tasks, create_task
+from fastapi import FastAPI, HTTPException
+from .database import get_all_tasks, create_task, get_task_by_title
 from .models import Task
 
 app = FastAPI()
@@ -15,8 +15,14 @@ async def get_tasks():
 
 @app.post('/api/tasks')
 async def save_task(task: Task):
+    task_found = await get_task_by_title(task.title)
+    if task_found:
+        raise HTTPException(status_code=409, detail='Task already exists')
+
     response = await create_task(task.dict())
-    return 'save task'
+    if response:
+        return response
+    raise HTTPException(status_code=400, detail='Error to create the document')
 
 @app.get('/api/tasks/{id}')
 async def get_task():

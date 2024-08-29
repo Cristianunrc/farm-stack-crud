@@ -2,6 +2,7 @@ import os
 
 from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
+from bson import ObjectId
 from .models import Task
 
 load_dotenv()
@@ -13,7 +14,7 @@ db = client.taskdb
 collection = db.tasks
 
 async def get_task_by_id(id):
-    task = await collection.find_one({'_id': id})
+    task = await collection.find_one({'_id': ObjectId(id)})
     return task
 
 async def get_task_by_title(title):
@@ -35,9 +36,9 @@ async def create_task(task):
 
 async def update_task(id: str, task):
     await collection.update_one({'_id': id}, {'$set': task})
-    doc = await collection.find_one({'_id': id})
-    return doc
+    updated_task = await collection.find_one({'_id': id})
+    return updated_task
 
 async def delete_task(id: str):
-    await collection.delete_one({'_id': id})
-    return True
+    result = await collection.delete_one({'_id': ObjectId(id)})
+    return result.deleted_count > 0

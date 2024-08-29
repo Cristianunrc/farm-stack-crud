@@ -12,8 +12,12 @@ client = AsyncIOMotorClient(URI)
 db = client.taskdb
 collection = db.tasks
 
-async def get_one_task_id(id):
+async def get_task_by_id(id):
     task = await collection.find_one({'_id': id})
+    return task
+
+async def get_task_by_title(title):
+    task = await collection.find_one({'title': title})
     return task
 
 async def get_all_tasks():
@@ -26,6 +30,7 @@ async def get_all_tasks():
 async def create_task(task):
     new_task = await collection.insert_one(task)
     created_task = await collection.find_one({'_id': new_task.inserted_id})
+    created_task['_id'] = str(created_task['_id'])
     return created_task
 
 async def update_task(id: str, task):

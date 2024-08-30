@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from .database import get_all_tasks, create_task, delete_task, get_task_by_title, get_task_by_id
-from .models import Task
+from .database import get_all_tasks, create_task, delete_task, update_task, get_task_by_title, get_task_by_id
+from .models import Task, UpdateTask
 
 app = FastAPI()
 
@@ -26,15 +26,19 @@ async def save_task(task: Task):
 
 @app.get('/api/tasks/{id}')
 async def get_task(id: str):
-    task_found  = await get_task_by_id(id)
+    task_found = await get_task_by_id(id)
     if task_found:
         task_found['_id'] = str(task_found['_id'])
         return task_found
     raise HTTPException(status_code=404, detail=f'Task not found by id {id}')
 
 @app.put('/api/tasks/{id}')
-async def update_tasks():
-    return 'updating task'
+async def modify_task(id: str, task: UpdateTask):
+    response = await update_task(id, task)
+    if response:
+        response['_id'] = str(response['_id'])
+        return response
+    raise HTTPException(status_code=404, detail=f'Task not found by id {id}')
 
 @app.delete('/api/tasks/{id}')
 async def remove_task(id: str):

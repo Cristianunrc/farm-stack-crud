@@ -34,9 +34,11 @@ async def create_task(task):
     created_task['_id'] = str(created_task['_id'])
     return created_task
 
-async def update_task(id: str, task):
-    await collection.update_one({'_id': id}, {'$set': task})
-    updated_task = await collection.find_one({'_id': id})
+async def update_task(id: str, data):
+    task_items = data.dict().items()
+    task = {key : val for key, val in task_items if val is not None}
+    await collection.update_one({'_id': ObjectId(id)}, {'$set': task})
+    updated_task = await collection.find_one({'_id': ObjectId(id)})
     return updated_task
 
 async def delete_task(id: str):

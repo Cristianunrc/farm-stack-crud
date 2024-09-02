@@ -1,18 +1,31 @@
-import {useState, useEffect} from 'react'
-import {useParams} from 'react-router-dom'
 import axios from 'axios'
+import {useState, useEffect} from 'react'
+import {useParams, useNavigate} from 'react-router-dom'
 
 function TaskForm() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const params = useParams()
+  const nav = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const response = await axios.post('http://localhost:8000/api/tasks', {
-      title,
-      description
-    })
+    try {
+      if (!params.id) { // create task
+        const response = await axios.post('http://localhost:8000/api/tasks', {
+          title,
+          description
+        })
+      } else { // update task
+        const response = await axios.put(`http://localhost:8000/api/tasks/${params.id}`, {
+          title,
+          description
+        })
+      }
+      nav('/')
+    } catch (error) {
+      console.log(error)
+    }
     e.target.reset()
   }
 

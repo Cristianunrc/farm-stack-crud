@@ -25,7 +25,8 @@ async def get_all_tasks():
     tasks = []
     cursor = collection.find({})
     async for doc in cursor:
-        tasks.append(Task(**doc))
+        doc['_id'] = str(doc['_id'])
+        tasks.append(doc)
     return tasks
 
 async def create_task(task):

@@ -1,6 +1,6 @@
-import axios from 'axios'
 import {useState, useEffect} from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
+import {getTaskById, createTask, updateTask, deleteTask} from '../api/fetchTasks'
 
 function TaskForm() {
   const [title, setTitle] = useState('')
@@ -12,15 +12,9 @@ function TaskForm() {
     e.preventDefault()
     try {
       if (!params.id) { // create task
-        const response = await axios.post('http://localhost:8000/api/tasks', {
-          title,
-          description
-        })
+        const response = await createTask({title, description})
       } else { // update task
-        const response = await axios.put(`http://localhost:8000/api/tasks/${params.id}`, {
-          title,
-          description
-        })
+        const response = await updateTask(params.id, {title, description})
       }
       nav('/')
     } catch (error) {
@@ -31,13 +25,12 @@ function TaskForm() {
 
   useEffect(() => {
     if (params.id) {
-      fetchTaskById()
-    }
-
-    async function fetchTaskById() {
-      const response = await axios.get(`http://localhost:8000/api/tasks/${params.id}`)
-      setTitle(response.data.title)
-      setDescription(response.data.description)
+      getTaskById(params.id)
+        .then((response) => {
+          setTitle(response.data.title)
+          setDescription(response.data.description)
+        })
+        .catch((error) => console.log(error))
     }
   }, [])
 
@@ -71,7 +64,7 @@ function TaskForm() {
               className="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded mt-5"
               onClick={async () => {
                 try {
-                  const response = await axios.delete(`http://localhost:8000/api/tasks/${params.id}`)
+                  const response = await deleteTask(params.id)
                   nav('/')
                 } catch (error) {
                   console.log(error)

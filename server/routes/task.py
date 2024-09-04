@@ -11,21 +11,21 @@ async def get_tasks():
 
 @task.post('/api/tasks')
 async def save_task(task: Task):
-    task_found = await get_task_by_title(task.title)
-    if task_found:
+    task = await get_task_by_title(task.title)
+    if task:
         raise HTTPException(status_code=409, detail='Task already exists')
 
     response = await create_task(task.dict())
     if response:
         return response
-    raise HTTPException(status_code=400, detail='Error to create the document')
+    raise HTTPException(status_code=400, detail='Error to create task')
 
 @task.get('/api/tasks/{id}')
 async def get_task(id: str):
-    task_found = await get_task_by_id(id)
-    if task_found:
-        task_found['_id'] = str(task_found['_id'])
-        return task_found
+    task = await get_task_by_id(id)
+    if task:
+        task['_id'] = str(task['_id'])
+        return task
     raise HTTPException(status_code=404, detail=f'Task not found by id {id}')
 
 @task.put('/api/tasks/{id}')
@@ -40,5 +40,5 @@ async def modify_task(id: str, task: UpdateTask):
 async def remove_task(id: str):
     response = await delete_task(id)
     if response:
-        return 'Successfully deleted'
+        return {'message': 'Successfully deleted'}
     raise HTTPException(status_code=404, detail=f'Task not found by id {id}')

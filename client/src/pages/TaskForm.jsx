@@ -47,14 +47,17 @@ function TaskForm() {
             placeholder="Title"
             autoFocus
             onChange={(e) => setTitle(e.target.value)}
-            value={title}/>
+            value={title}
+            required/>
           <textarea 
             className="block py-2 px-3 mb-4 w-full text-black"
             rows="3"
             placeholder="Description"
             onChange={(e) => setDescription(e.target.value)}
-            value={description}></textarea>
-          <button className="bg-white hover:bg-slate-800 hover:text-white text-slate-800 py-2 px-4 rounded">
+            value={description}
+            required></textarea>
+          <button 
+            className="bg-white hover:bg-slate-800 hover:text-white text-slate-800 py-2 px-4 rounded">
             {params.id ? "Update" : "Create"}
           </button>
         </form>

@@ -11,8 +11,8 @@ async def get_tasks():
 
 @task.post('/api/tasks')
 async def save_task(task: Task):
-    task = await get_task_by_title(task.title)
-    if task:
+    existing_task = await get_task_by_title(task.title)
+    if existing_task:
         raise HTTPException(status_code=409, detail='Task already exists')
 
     response = await create_task(task.dict())

@@ -9,8 +9,10 @@ function TaskCard({task}) {
       className="bg-zinc-950 p-4 hover:cursor-pointer hover:bg-gay-950"
       onClick={() => { nav(`/tasks/${task._id}`)}}>
       <div className="flex justify-between">
-        <h2 className="font-bold text-2xl">{task.title}</h2>
-        <button 
+        <div className="w-full border-b-2 border-slate-600 pb-2 mb-2">
+          <h2 className="font-bold text-2xl text-center">{task.title}</h2>
+        </div>
+        <button
           onClick={async (e) => {
             e.stopPropagation()
             const response = await updateTask(task._id, {completed: !task.completed})

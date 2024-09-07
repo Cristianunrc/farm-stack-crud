@@ -5,20 +5,30 @@ import {getTaskById, createTask, updateTask, deleteTask} from '../api/fetchTasks
 function TaskForm() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [errorMssg, setErrorMssg] = useState('')
   const params = useParams()
   const nav = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      if (!params.id) { // create task
-        const response = await createTask({title, description})
-      } else { // update task
-        const response = await updateTask(params.id, {title, description})
+      let response
+      if (!params.id) {
+        response = await createTask({title, description})
+      } else {
+        response = await updateTask(params.id, {title, description})
       }
-      nav('/')
+      nav('/') 
     } catch (error) {
-      console.log(error)
+      if (error.response.status === 409) {
+        setErrorMssg('Title already exists')
+      } else {
+        setErrorMssg('An unexpected error ocurred')
+      }
+      
+      setTimeout(() => {
+        setErrorMssg('')
+      }, 3500)
     }
     e.target.reset()
   }
@@ -76,6 +86,7 @@ function TaskForm() {
             }
           </div>
         </form>
+        {errorMssg && <p className="text-red-500 text-center mt-2">{errorMssg}</p>}
       </div>
     </div>
   )

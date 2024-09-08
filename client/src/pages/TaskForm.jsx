@@ -41,8 +41,11 @@ function TaskForm() {
           setDescription(response.data.description)
         })
         .catch((error) => console.log(error))
+    } else {
+      setTitle('')
+      setDescription('')
     }
-  }, [])
+  }, [params.id])
 
   return (
     <div className="flex items-center justify-center h-[calc(100vh-10rem)]">
@@ -51,21 +54,21 @@ function TaskForm() {
           <h1 className="text-3xl text-center font-bold my-4 ">
             {params.id ? "Update task" : "Create task"}
           </h1>
-          <input 
+          <input
             className="block py-2 px-3 mb-4 w-full text-black"
             type="text"
             placeholder="Title"
             autoFocus
             onChange={(e) => setTitle(e.target.value)}
             value={title} required/>
-          <textarea 
+          <textarea
             className="block py-2 px-3 mb-4 w-full text-black"
             rows="3"
             placeholder="Description"
             onChange={(e) => setDescription(e.target.value)}
             value={description} required></textarea>
           <div className="flex justify-center space-x-4">
-            <button 
+            <button
               className="bg-white hover:bg-slate-800 hover:text-white text-slate-800 py-2 px-4 rounded">
               {params.id ? "Update" : "Create"}
             </button>

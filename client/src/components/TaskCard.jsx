@@ -1,29 +1,37 @@
+import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {updateTask} from '../api/fetchTasks'
 
 function TaskCard({task}) {
+  const [completed, setCompleted] = useState(task.completed)
   const nav = useNavigate()
+
+  const handleTaskCompleted = async (e) => {
+    e.stopPropagation()
+    try {
+      const response = await updateTask(task._id, {completed: !completed})
+      if (response.status === 200) {
+        setCompleted(!completed)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <div
       className="relative bg-zinc-950 p-4 hover:cursor-pointer hover:bg-gay-950"
       onClick={() => { nav(`/tasks/${task._id}`)}}>
       <button
-        className="absolute top-1 right-1"
-        onClick={async (e) => {
-          e.stopPropagation()
-          const response = await updateTask(task._id, {completed: !task.completed})
-          if (response.status === 200) {
-            window.location.reload()
-          }
-        }}>
+        className="absolute top-1 right-1 border border-gray-600 hover:bg-gray-800 rounded"
+        onClick={handleTaskCompleted}>
         <svg 
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className={`w-6 h-6 ${task.completed? 'text-green-500' : ''}`}>
+          className={`w-6 h-6 ${completed? 'text-green-500' : ''}`}>
           <path
             strokeLinecap="round"
             strokeLinejoin="round"

@@ -12,11 +12,10 @@ function TaskForm() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      let response
       if (!params.id) {
-        response = await createTask({title, description})
+        const response = await createTask({title, description})
       } else {
-        response = await updateTask(params.id, {title, description})
+        const response = await updateTask(params.id, {title, description})
       }
       nav('/') 
     } catch (error) {

@@ -11,11 +11,14 @@ async def get_tasks():
 
 @task.post('/api/tasks')
 async def save_task(task: Task):
+    if not task.title or not task.description:
+        raise HTTPException(status_code=400, detail='Title or description are required')
+    
     existing_task = await get_task_by_title(task.title)
     if existing_task:
         raise HTTPException(status_code=409, detail='Task already exists')
 
-    response = await create_task(task.dict())
+    response = await create_task(task.model_dump())
     if response:
         return response
     raise HTTPException(status_code=400, detail='Error to create task')
@@ -30,6 +33,9 @@ async def get_task(id: str):
 
 @task.put('/api/tasks/{id}')
 async def modify_task(id: str, task: UpdateTask):
+    if not task.title or not task.description:
+        raise HTTPException(status_code=400, detail='Title or description are required')
+    
     response = await update_task(id, task)
     if response:
         response['_id'] = str(response['_id'])

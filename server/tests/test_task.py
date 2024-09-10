@@ -44,12 +44,17 @@ async def test_save_task(mock_get_task_by_title, mock_create_task):
     assert response.status_code == 409
     assert response.json() == {'detail': 'Task already exists'}
 
+    task = data('1', '', '', False)
+    response = client.post('/api/tasks', json=task)
+    assert response.status_code == 400
+    assert response.json() == {'detail': 'Title or description are required'}
+
 @pytest.mark.asyncio
 @patch(f'{path}.get_task_by_id', new_callable=AsyncMock)
 async def test_get_task(mock_get_task_by_id):
     task = data('1', 'Title 1', 'Description 1', False)
     mock_get_task_by_id.return_value = task
-    response = client.get('/api/tasks/{task._id}')
+    response = client.get('/api/tasks/1')
     assert response.status_code == 200
     assert response.json() == task
 
@@ -58,9 +63,14 @@ async def test_get_task(mock_get_task_by_id):
 async def test_modify_task(mock_update_task):
     update_task = data('1', 'Title 1', 'Updated description 1', True)
     mock_update_task.return_value = update_task
-    response = client.put('/api/tasks/{task._id}', json=update_task)
+    response = client.put('/api/tasks/1', json=update_task)
     assert response.status_code == 200
     assert response.json() == update_task
+
+    update_task = data('1', '', '', True)
+    response = client.put('/api/tasks/1', json=update_task)
+    assert response.status_code == 400
+    assert response.json() == {'detail': 'Title or description are required'}
 
 @pytest.mark.asyncio
 @patch(f'{path}.delete_task', new_callable=AsyncMock)

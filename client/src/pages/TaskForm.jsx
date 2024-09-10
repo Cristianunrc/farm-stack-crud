@@ -13,11 +13,11 @@ function TaskForm() {
     e.preventDefault()
     try {
       if (!params.id) {
-        const response = await createTask({title, description})
+        await createTask({title, description})
       } else {
-        const response = await updateTask(params.id, {title, description})
+        await updateTask(params.id, {title, description})
       }
-      nav('/') 
+      nav('/')
     } catch (error) {
       if (error.response.status === 409) {
         setErrorMssg('Title already exists')
@@ -55,6 +55,7 @@ function TaskForm() {
           </h1>
           <input
             className="block py-2 px-3 mb-4 w-full text-black"
+            data-testid="title-id"
             type="text"
             placeholder="Title"
             autoFocus
@@ -62,6 +63,7 @@ function TaskForm() {
             value={title} required/>
           <textarea
             className="block py-2 px-3 mb-4 w-full text-black"
+            data-testid="description-id"
             rows="3"
             placeholder="Description"
             onChange={(e) => setDescription(e.target.value)}

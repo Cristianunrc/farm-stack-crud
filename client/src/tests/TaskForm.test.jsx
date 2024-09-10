@@ -56,7 +56,7 @@ describe('TaskForm component', () => {
       </MemoryRouter>
     )
 
-    const titleInput = screen.findByTestId('title-id')
+    const titleInput = screen.getByTestId('title-id')
     const descriptionInput = screen.getByTestId('description-id')
 
     fireEvent.change(titleInput, {target: {value: 'Updated title'}})

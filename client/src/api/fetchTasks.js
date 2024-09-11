@@ -1,29 +1,13 @@
 import axios from 'axios'
 
-const URL = 'http://localhost:8000'
-const route = `${URL}/api/tasks`
+const route = 'http://localhost:8000/api/tasks'
 
-export const getTasks = async () => {
-  const response = await axios.get(route)
-  return response
-}
+export const getTasks = () => axios.get(route)
 
-export const getTaskById = async (id) => {
-  const response = await axios.get(`${route}/${id}`)
-  return response
-}
+export const getTaskById = (id) => axios.get(`${route}/${id}`)
 
-export const createTask = (newTask) => {
-  const response = axios.post(`${route}`, newTask)
-  return response
-}
+export const createTask = (newTask) => axios.post(`${route}`, newTask)
 
-export const updateTask = (id, task) => {
-  const response = axios.put(`${route}/${id}`, task)
-  return response
-}
+export const updateTask = (id, task) => axios.put(`${route}/${id}`, task)
 
-export const deleteTask = (id) => {
-  const response = axios.delete(`${route}/${id}`)
-  return response
-}
+export const deleteTask = (id) => axios.delete(`${route}/${id}`)

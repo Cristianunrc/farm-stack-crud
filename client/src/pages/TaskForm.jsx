@@ -24,7 +24,7 @@ function TaskForm() {
       } else {
         setErrorMssg('An unexpected error ocurred')
       }
-      
+
       setTimeout(() => {
         setErrorMssg('')
       }, 3500)
@@ -78,7 +78,7 @@ function TaskForm() {
                   className="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded"
                   onClick={async () => {
                     try {
-                      const response = await deleteTask(params.id)
+                      await deleteTask(params.id)
                       nav('/')
                     } catch (error) {
                       console.log(error)

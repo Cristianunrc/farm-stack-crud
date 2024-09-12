@@ -19,15 +19,15 @@ function TaskForm() {
       }
       nav('/')
     } catch (error) {
-      if (error.response.status === 409) {
-        setErrorMssg('Title already exists')
+      if (error.response) {
+        if (error.response.status === 409) {
+          setErrorMssg('Title already exists')
+        }
       } else {
         setErrorMssg('An unexpected error ocurred')
       }
 
-      setTimeout(() => {
-        setErrorMssg('')
-      }, 3500)
+      setTimeout(() => setErrorMssg(''), 3500)
     }
     e.target.reset()
   }
@@ -74,14 +74,14 @@ function TaskForm() {
               {params.id ? "Update" : "Create"}
             </button>
             {params.id && (
-                <button 
+                <button
                   className="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded"
                   onClick={async () => {
                     try {
                       await deleteTask(params.id)
                       nav('/')
                     } catch (error) {
-                      console.log(error)
+                      setErrorMssg('An unexpected error ocurred')
                     }
                   }}>
                   Delete

@@ -9,12 +9,16 @@ function TaskCard({task}) {
   const handleTaskCompleted = async (e) => {
     e.stopPropagation()
     try {
-      const response = await updateTask(task._id, {title: task.title, description: task.description, completed: !completed})
-      if (response.status === 200) {
+      const res = await updateTask(task._id, {
+        title: task.title,
+        description: task.description,
+        completed: !completed}
+      )
+      if (res.status === 200) {
         setCompleted(!completed)
       }
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     }
   }
 

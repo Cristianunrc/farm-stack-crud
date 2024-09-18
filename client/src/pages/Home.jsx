@@ -1,16 +1,16 @@
 import {useEffect, useState} from 'react'
-import TaskList from '../components/TaskList'
 import {getTasks} from '../api/fetchTasks'
+import TaskList from '../components/TaskList'
 
 function Home() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     getTasks()
-      .then((response) => {
-        setTasks(response.data)
+      .then((res) => {
+        setTasks(res.data)
       })
-      .catch((error) => console.log(error))
+      .catch((err) => console.log(err))
   }, [])
 
   return (

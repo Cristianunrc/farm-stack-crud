@@ -18,15 +18,14 @@ function TaskForm() {
         await updateTask(params.id, {title, description})
       }
       nav('/')
-    } catch (error) {
-      if (error.response) {
-        if (error.response.status === 409) {
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 409) {
           setErrorMssg('Title already exists')
         }
       } else {
         setErrorMssg('An unexpected error ocurred')
       }
-
       setTimeout(() => setErrorMssg(''), 3500)
     }
     e.target.reset()
@@ -35,11 +34,11 @@ function TaskForm() {
   useEffect(() => {
     if (params.id) {
       getTaskById(params.id)
-        .then((response) => {
-          setTitle(response.data.title)
-          setDescription(response.data.description)
+        .then((res) => {
+          setTitle(res.data.title)
+          setDescription(res.data.description)
         })
-        .catch((error) => console.log(error))
+        .catch((err) => console.log(err))
     } else {
       setTitle('')
       setDescription('')
@@ -80,7 +79,7 @@ function TaskForm() {
                     try {
                       await deleteTask(params.id)
                       nav('/')
-                    } catch (error) {
+                    } catch (err) {
                       setErrorMssg('An unexpected error ocurred')
                     }
                   }}>

@@ -2,10 +2,13 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 from .routes.task import task
 
 load_dotenv()
+
 CLIENT_URL = os.getenv("CLIENT_URL")
 
 app = FastAPI()
@@ -19,8 +22,10 @@ app.add_middleware(
     allow_headers=['*']
 )
 
-@app.get('/')
-def root():
-    return {'Wellcome': 'Wellcome to the API'}
-
 app.include_router(task)
+
+app.mount("/", StaticFiles(directory="client/dist", html=True), name="static")
+
+@app.get("/{full_path:path}")
+async def serve_react_app(full_path: str):
+    return FileResponse("client/dist/index.html")

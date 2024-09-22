@@ -1,17 +1,14 @@
 import os
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from dotenv import load_dotenv
 from .routes.task import task
+from dotenv import load_dotenv
+
+app = FastAPI()
 
 load_dotenv()
 
-CLIENT_URL = os.getenv("CLIENT_URL")
-
-app = FastAPI()
+CLIENT_URL = os.getenv('CLIENT_URL')
 
 #CORS settings
 app.add_middleware(
@@ -23,9 +20,3 @@ app.add_middleware(
 )
 
 app.include_router(task)
-
-app.mount("/", StaticFiles(directory="client/dist", html=True), name="static")
-
-@app.get("/{full_path:path}")
-async def serve_react_app(full_path: str):
-    return FileResponse("client/dist/index.html")

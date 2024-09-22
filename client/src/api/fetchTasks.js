@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const route = 'http://localhost:8000/api/tasks'
+const URL = import.meta.env.VITE_API || 'http://localhost:8000'
+const route = `${URL}/api/tasks`
 
 export const getTasks = () => axios.get(route)
 
